@@ -5,3 +5,14 @@
 -3 -> нет
 7 -> нет
 */
+
+Console.Write("Введите число: ");
+string inputNum = Console.ReadLine();
+int num = Convert.ToInt32(inputNum);
+
+if (num % 2 == 0) {
+    Console.WriteLine("Число " + num + " чётное.");
+}
+else {
+    Console.WriteLine("Число " + num + " не чётное.");
+}
