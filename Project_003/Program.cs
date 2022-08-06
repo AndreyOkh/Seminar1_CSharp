@@ -4,34 +4,26 @@
 Console.Write("Введите номер дня недели: ");
 string input = Console.ReadLine();
 
-string monday = "Понедельник";
-string tuesday = "Вторник";
-string wednesday = "Среда";
-string thursday = "Четверг";
-string friday = "Пятница";
-string saturday = "Суббота";
-string sunday = "Воскресенье";
-
 if (input == "1") {
-    Console.WriteLine(monday);
+    Console.WriteLine("Понедельник");
 }
 else if (input == "2") {
-    Console.WriteLine(tuesday);
+    Console.WriteLine("Вторник");
 }
 else if (input == "3") {
-    Console.WriteLine(wednesday);
+    Console.WriteLine("Среда");
 }
 else if (input == "4") {
-    Console.WriteLine(thursday);
+    Console.WriteLine("Четверг");
 }
 else if (input == "5") {
-    Console.WriteLine(friday);
+    Console.WriteLine("Пятница");
 }
 else if (input == "6") {
-    Console.WriteLine(saturday);
+    Console.WriteLine("Суббота");
 }
 else if (input == "7") {
-    Console.WriteLine(sunday);
+    Console.WriteLine("Воскресенье");
 }
 else {
     Console.WriteLine("Значение введено не верно! Попробуйте еще раз.");
