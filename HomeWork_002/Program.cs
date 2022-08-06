@@ -13,10 +13,10 @@ int firstNumber = Convert.ToInt32(firstNumberInput);
 int secondNumber = Convert.ToInt32(secondNumberInput);
 
 if (firstNumber > secondNumber) {
-    Console.WriteLine(firstNumber);
+    Console.WriteLine("Максимальное число " + firstNumber + ", минимальное число " + secondNumber);
 }
 else if (firstNumber < secondNumber) {
-    Console.WriteLine(secondNumber);
+    Console.WriteLine("Максимальное число " + secondNumber + ", минимальное число " + firstNumber);
 }
 else {
     Console.WriteLine("Значеения равны");
