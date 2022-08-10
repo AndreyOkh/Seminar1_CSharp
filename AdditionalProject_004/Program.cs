@@ -7,14 +7,14 @@
 // WriteName – вывести имя после ввода пароля
 
 /*--------------------Объявляем переменные--------------------*/
-string command = "";
-string name = "";
-string password = "";
+string? command = "";
+string? name = "";
+string? password = "";
 
 /*--------------------Цикл ожидания команды--------------------*/
  while (command != "exit") {
     Console.Write("Введите команду: ");
-    command =  Console.ReadLine().ToLower();
+    command = Console.ReadLine().ToLower();
 
     switch(command)
     {
@@ -35,7 +35,7 @@ string password = "";
             if (name != "" && password != "")
             {
                 Console.Write("Введите пароль: ");
-                string passwordUser =  Console.ReadLine();
+                string? passwordUser =  Console.ReadLine();
                 if (passwordUser == password) 
                 {
                     Console.WriteLine($"Привет {name}");

@@ -5,9 +5,9 @@ a = 2; b = 10 -> max = 10
 a = -9; b = -3 -> max = -3
 */
 Console.Write("Введи первое число: ");
-string firstNumberInput = Console.ReadLine();
+string? firstNumberInput = Console.ReadLine();
 Console.Write("Введи второе число: ");
-string secondNumberInput = Console.ReadLine();
+string? secondNumberInput = Console.ReadLine();
 
 int firstNumber = Convert.ToInt32(firstNumberInput);
 int secondNumber = Convert.ToInt32(secondNumberInput);

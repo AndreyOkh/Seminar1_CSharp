@@ -6,15 +6,15 @@
 */
 
 Console.Write("Введите первое число: ");
-string inputNum1 = Console.ReadLine();
+string? inputNum1 = Console.ReadLine();
 int num1 = Convert.ToInt32(inputNum1);
 
 Console.Write("Введите второе число: ");
-string inputNum2 = Console.ReadLine();
+string? inputNum2 = Console.ReadLine();
 int num2 = Convert.ToInt32(inputNum2);
 
 Console.Write("Введите третье число: ");
-string inputNum3 = Console.ReadLine();
+string? inputNum3 = Console.ReadLine();
 int num3 = Convert.ToInt32(inputNum3);
 
 int max = num1;

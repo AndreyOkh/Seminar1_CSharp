@@ -2,7 +2,7 @@
 Напишите программу, которая принимает на вход трёхзначное число и на выходе показывает последнюю цифру этого числа.
 */
 Console.Write("Введите трехзначное число: ");
-string input = Console.ReadLine();
+string? input = Console.ReadLine();
 int number = Convert.ToInt32(input);
 
 if (number > 99 && number < 1000) {

@@ -5,7 +5,7 @@
 
 string message = "Top secret message";
 string passwd = "passwd";
-string userPasswd;
+string? userPasswd;
 
 int countPasswd = 0;
 

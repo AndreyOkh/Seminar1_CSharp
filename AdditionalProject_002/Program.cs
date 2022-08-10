@@ -2,7 +2,7 @@
 2. Есть программа с бесконечным циклом. Когда пользователь вводит exit программа заканчивается
 */
 
-string command = "";
+string? command = "";
 int i = 0;
 
  while (command != "exit") {
