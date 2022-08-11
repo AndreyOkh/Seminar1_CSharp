@@ -38,15 +38,33 @@ while (exit != true)
             string firstСurrencyCode = ReadUserCommad("Введите код валюты которую вы хотите конвертировать: ");
             if (costsCurrencys.ContainsKey(firstСurrencyCode))
             {
-                string secondCurrencyCode = ReadUserCommad($"У вас {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()}, введите код валюты в которую вы хотите их конвертировать: ");
-                if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
+                string amountToConvert = ReadUserCommad("Введите сумму для конвертации или ALL если хотите конвертировать всё: ");
+                if (amountToConvert == "all")
                 {
-                    ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountUserMoney[firstСurrencyCode]);
+                    string secondCurrencyCode = ReadUserCommad($"У вас {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()}, введите код валюты в которую вы хотите их конвертировать: ");
+                    if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
+                    {
+                        ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountUserMoney[firstСurrencyCode]);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Введенный код валюты не найден! Введите help что бы вызвать справку.");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Введенный код валюты не найден! Введите help что бы вызвать справку.");
+                    double amountToConvertDouble = Convert.ToDouble(amountToConvert);
+                    string secondCurrencyCode = ReadUserCommad($"Введите код валюты в которую вы хотите конвертировать {amountToConvert} {firstСurrencyCode.ToUpper()}: ");
+                    if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
+                    {
+                        ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountToConvertDouble);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Введенный код валюты не найден! Введите help что бы вызвать справку.");
+                    }
                 }
+
             }
             else
             {
