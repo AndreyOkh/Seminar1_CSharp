@@ -10,7 +10,8 @@ var costsCurrencys = new Dictionary<string, double>()
     {"eur", 61.70},
     {"sek", 5.94},
     {"chf", 63.53},
-    {"jpu", 0.45}
+    {"jpu", 0.45},
+    {"rub", 1}
 };
 
 /*-------------------------Баланс пользователя-------------------------*/
@@ -20,8 +21,30 @@ var amountUserMoney = new Dictionary<string, double>()
     {"eur", 64524},
     {"sek", 34645},
     {"chf", 43245},
-    {"jpu", 46344}
+    {"jpu", 46344},
+    {"rub", 124827485734}
 };
+
+/*-------------------------Help-------------------------*/
+void HelpCommand ()
+{
+    Console.WriteLine(@"
+    Команды:
+        Converter - конвертирует одну валюту в другую.
+        Rates - показывает курсы валют
+        Balances - показывает баланс в разных валютах
+        Help - выводит справку
+        Exit - закрывает программу
+        
+    Коды валют:
+        USD - Американский доллар
+        EUR - Евро
+        SEK - Шведский крон
+        CHF - Швейцарский франк
+        JPU - Японская иена
+        RUB - Рубль"
+    );
+}
 
 /*-------------------------Команды пользователя-------------------------*/
 string? command = "";
@@ -34,7 +57,7 @@ while (exit != true)
     switch (command)
     {
         /*-------------------------Команда конвертирует одну валюту в другую-------------------------*/
-        case ("converttocurrency"):
+        case ("converter"):
             string firstСurrencyCode = ReadUserCommad("Введите код валюты которую вы хотите конвертировать: ");
             if (costsCurrencys.ContainsKey(firstСurrencyCode))
             {
@@ -48,40 +71,39 @@ while (exit != true)
                     }
                     else
                     {
-                        Console.WriteLine("Введенный код валюты не найден! Введите help что бы вызвать справку.");
+                        Console.WriteLine("Введенный код валюты не найден!");
+                        HelpCommand();
                     }
                 }
                 else
                 {
-                    double amountToConvertDouble = Convert.ToDouble(amountToConvert);
-                    string secondCurrencyCode = ReadUserCommad($"Введите код валюты в которую вы хотите конвертировать {amountToConvert} {firstСurrencyCode.ToUpper()}: ");
-                    if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
+                    try
                     {
-                        ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountToConvertDouble);
+                        double amountToConvertDouble = Convert.ToDouble(amountToConvert);
+                        string secondCurrencyCode = ReadUserCommad($"Введите код валюты в которую вы хотите конвертировать {amountToConvert} {firstСurrencyCode.ToUpper()}: ");
+                        if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
+                        {
+                            ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountToConvertDouble);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Введенный код валюты не найден!");
+                            HelpCommand();
+                        }
                     }
-                    else
+                    catch
                     {
-                        Console.WriteLine("Введенный код валюты не найден! Введите help что бы вызвать справку.");
+                        Console.WriteLine("Введена неизвестная команда.");
+                        continue;
                     }
+
                 }
 
             }
             else
             {
-                Console.WriteLine("Введенный код валюты не найден! Введите help что бы вызвать справку.");
-            }
-            continue;
-
-        /*-------------------------Команда конвертирует валюту в рубли-------------------------*/
-        case ("converttorub"):
-            string currencyCode = ReadUserCommad("Введите код валюты что бы конвертировать ее в рубли: ");
-            if (costsCurrencys.ContainsKey(currencyCode))
-            {
-                ConvertToRub(currencyCode, costsCurrencys[currencyCode], amountUserMoney[currencyCode]);
-            }
-            else
-            {
-                Console.WriteLine("Введенный код валюты не найден! Введите help что бы вызвать справку.");
+                Console.WriteLine("Введенный код валюты не найден!");
+                HelpCommand();
             }
             continue;
 
@@ -112,7 +134,8 @@ while (exit != true)
             break;
 
         default:
-            Console.WriteLine("Я не знаю таких команд, введите help что бы вызвать справку или exit что бы выйти.");
+            Console.WriteLine("Я не знаю такую команду.");
+            HelpCommand();
             continue;
 
     }
@@ -130,38 +153,10 @@ string ReadUserCommad (string message)
     return result;
 }
 
-/*-------------------------Концертация валюты в рубли-------------------------*/
-void ConvertToRub (string currencyCode,double costsCurrency, double amount)
-{
-    double value = costsCurrency * amount;
-    Console.WriteLine($"{amount} {currencyCode.ToUpper()} = {Math.Round(value, 2)} RUB.");
-}
-
-/*-------------------------Конвертация валюты в другую валюту-------------------------*/
+/*-------------------------Конвертация валюты-------------------------*/
 void ConvertToCurrency (string firstCurrencyCode, double firstCostCurrency, string secondCurrencyCode, double secondCostCurrency, double amount)
 {
     double firstCurrencyToRub = firstCostCurrency * amount;
     double rubToSecondCurrency = firstCurrencyToRub / secondCostCurrency;
     Console.WriteLine($"{amount} {firstCurrencyCode.ToUpper()} = {Math.Round(rubToSecondCurrency, 2)} {secondCurrencyCode.ToUpper()}");
-}
-
-/*-------------------------Help-------------------------*/
-void HelpCommand ()
-{
-    Console.WriteLine(@"
-    Команды:
-        ConvertToCurrency - конвертирует одну валюту в другую.
-        ConvertToRub - конвертирует выбранную валюту в рубли
-        Rates - показывает курсы валют
-        Balances - показывает баланс в разных валютах
-        Help - выводит справку
-        Exit - закрывает программу
-        
-    Коды валют:
-        USD - Американский доллар
-        EUR - евро
-        SEK - Шведский крон
-        CHF - Швейцарский франк
-        JPU - Японская иена"
-    );
 }
