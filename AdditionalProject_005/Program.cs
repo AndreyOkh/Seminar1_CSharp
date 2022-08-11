@@ -25,13 +25,15 @@ var amountUserMoney = new Dictionary<string, double>()
 
 /*-------------------------Команды пользователя-------------------------*/
 string? command = "";
+bool exit = false;
 HelpCommand();
-while (command != "exit")
+while (exit != true)
 {
     command = ReadUserCommad("Введите команду: ");
 
     switch (command)
     {
+        /*-------------------------Команда конвертирует одну валюту в другую-------------------------*/
         case ("converttocurrency"):
             string firstСurrencyCode = ReadUserCommad("Введите код валюты которую вы хотите конвертировать: ");
             if (costsCurrencys.ContainsKey(firstСurrencyCode))
@@ -50,10 +52,9 @@ while (command != "exit")
             {
                 Console.WriteLine("Введенный код валюты не найден! Введите help что бы вызвать справку.");
             }
-            
+            continue;
 
-        continue;
-
+        /*-------------------------Команда конвертирует валюту в рубли-------------------------*/
         case ("converttorub"):
             string currencyCode = ReadUserCommad("Введите код валюты что бы конвертировать ее в рубли: ");
             if (costsCurrencys.ContainsKey(currencyCode))
@@ -64,27 +65,32 @@ while (command != "exit")
             {
                 Console.WriteLine("Введенный код валюты не найден! Введите help что бы вызвать справку.");
             }
-        continue;
+            continue;
 
+        /*-------------------------Команда выводит курсы валют-------------------------*/
         case ("rates"):
             foreach (var cost in costsCurrencys)
             {
-                Console.WriteLine($"{cost.Key} = {cost.Value}");
+                Console.WriteLine($"{cost.Key.ToUpper()} = {cost.Value}");
             }
             continue;
 
+        /*-------------------------Команда выводит балансы пользователя в каждой валюте-------------------------*/
         case ("balances"):
             foreach (var money in amountUserMoney)
             {
-                Console.WriteLine(money.Key + " = " + money.Value);
+                Console.WriteLine($"{money.Key.ToUpper()} = {money.Value}");
             }
             continue;
         
+        /*-------------------------Команда вызывает справку-------------------------*/
         case ("help"):
             HelpCommand();
             continue;
 
+        /*-------------------------Команда прерывает выполнение программы-------------------------*/
         case ("exit"):
+            exit = true;
             break;
 
         default:
@@ -110,7 +116,7 @@ string ReadUserCommad (string message)
 void ConvertToRub (string currencyCode,double costsCurrency, double amount)
 {
     double value = costsCurrency * amount;
-    Console.WriteLine($"{amount} {currencyCode.ToUpper()} это {Math.Round(value, 2)} в рублях.");
+    Console.WriteLine($"{amount} {currencyCode.ToUpper()} = {Math.Round(value, 2)} RUB.");
 }
 
 /*-------------------------Конвертация валюты в другую валюту-------------------------*/
@@ -118,26 +124,26 @@ void ConvertToCurrency (string firstCurrencyCode, double firstCostCurrency, stri
 {
     double firstCurrencyToRub = firstCostCurrency * amount;
     double rubToSecondCurrency = firstCurrencyToRub / secondCostCurrency;
-    Console.WriteLine($"{amount} {firstCurrencyCode.ToUpper()} это {Math.Round(rubToSecondCurrency, 2)} в {secondCurrencyCode.ToUpper()}");
+    Console.WriteLine($"{amount} {firstCurrencyCode.ToUpper()} = {Math.Round(rubToSecondCurrency, 2)} {secondCurrencyCode.ToUpper()}");
 }
 
 /*-------------------------Help-------------------------*/
 void HelpCommand ()
 {
     Console.WriteLine(@"
-        Команды:
+    Команды:
         ConvertToCurrency - конвертирует одну валюту в другую.
-        ConverToRub - конвертирует выбранную валюту в рубли
+        ConvertToRub - конвертирует выбранную валюту в рубли
         Rates - показывает курсы валют
         Balances - показывает баланс в разных валютах
         Help - выводит справку
         Exit - закрывает программу
         
-        Коды валют:
-        usd - Американский доллар
-        eur - евро
-        sek - Шведский крон
-        chf - Швейцарский франк
-        jpu - Японская иена"
+    Коды валют:
+        USD - Американский доллар
+        EUR - евро
+        SEK - Шведский крон
+        CHF - Швейцарский франк
+        JPU - Японская иена"
     );
 }
