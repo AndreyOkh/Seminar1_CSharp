@@ -34,8 +34,14 @@ void HelpCommand ()
         Rates - показывает курсы валют
         Balances - показывает баланс в разных валютах
         Help - выводит справку
-        Exit - закрывает программу
-        
+        Exit - закрывает программу"
+    );
+}
+
+/*-------------------------CodesCurrencys-------------------------*/
+void CodesCurrencysCommand ()
+{
+    Console.WriteLine(@"
     Коды валют:
         USD - Американский доллар
         EUR - Евро
@@ -45,6 +51,7 @@ void HelpCommand ()
         RUB - Рубль"
     );
 }
+
 
 /*-------------------------Команды пользователя-------------------------*/
 string? command = "";
@@ -58,6 +65,7 @@ while (exit != true)
     {
         /*-------------------------Команда конвертирует одну валюту в другую-------------------------*/
         case ("converter"):
+            CodesCurrencysCommand();
             string firstСurrencyCode = ReadUserCommad("Введите код валюты которую вы хотите конвертировать: ");
             if (costsCurrencys.ContainsKey(firstСurrencyCode))
             {
@@ -72,7 +80,7 @@ while (exit != true)
                     else
                     {
                         Console.WriteLine("Введенный код валюты не найден!");
-                        HelpCommand();
+                        CodesCurrencysCommand();
                     }
                 }
                 else
@@ -88,7 +96,7 @@ while (exit != true)
                         else
                         {
                             Console.WriteLine("Введенный код валюты не найден!");
-                            HelpCommand();
+                            CodesCurrencysCommand();
                         }
                     }
                     catch
@@ -103,12 +111,13 @@ while (exit != true)
             else
             {
                 Console.WriteLine("Введенный код валюты не найден!");
-                HelpCommand();
+                CodesCurrencysCommand();
             }
             continue;
 
         /*-------------------------Команда выводит курсы валют-------------------------*/
         case ("rates"):
+            Console.WriteLine("Курсы валют: ");
             foreach (var cost in costsCurrencys)
             {
                 Console.WriteLine($"{cost.Key.ToUpper()} = {cost.Value}");
@@ -117,6 +126,7 @@ while (exit != true)
 
         /*-------------------------Команда выводит балансы пользователя в каждой валюте-------------------------*/
         case ("balances"):
+            Console.WriteLine("Баланс: ");
             foreach (var money in amountUserMoney)
             {
                 Console.WriteLine($"{money.Key.ToUpper()} = {money.Value}");
@@ -126,6 +136,7 @@ while (exit != true)
         /*-------------------------Команда вызывает справку-------------------------*/
         case ("help"):
             HelpCommand();
+            CodesCurrencysCommand();
             continue;
 
         /*-------------------------Команда прерывает выполнение программы-------------------------*/
