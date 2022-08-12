@@ -55,9 +55,9 @@ void CodesCurrencysCommand ()
 
 /*-------------------------Команды пользователя-------------------------*/
 string? command = "";
-bool exit = false;
+bool isWork = false;
 HelpCommand();
-while (exit != true)
+while (!isWork)
 {
     command = ReadUserCommad("Введите команду: ");
 
@@ -70,9 +70,10 @@ while (exit != true)
             if (costsCurrencys.ContainsKey(firstСurrencyCode))
             {
                 string amountToConvert = ReadUserCommad("Введите сумму для конвертации или ALL если хотите конвертировать всё: ");
+                bool amountToConvertTry = double.TryParse(amountToConvert, out double amountToConvertDouble);
                 if (amountToConvert == "all")
                 {
-                    double amountToConvertDouble = amountUserMoney[firstСurrencyCode];
+                    amountToConvertDouble = amountUserMoney[firstСurrencyCode];
                     string secondCurrencyCode = ReadUserCommad($"У вас {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()}, введите код валюты в которую вы хотите их конвертировать: ");
                     if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
                     {
@@ -92,49 +93,38 @@ while (exit != true)
                         CodesCurrencysCommand();
                     }
                 }
-                else
+                else if (amountToConvertTry)
                 {
-                    try
+                    string secondCurrencyCode = ReadUserCommad($"Введите код валюты в которую вы хотите конвертировать {amountToConvert} {firstСurrencyCode.ToUpper()}: ");
+                    if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
                     {
-                        double amountToConvertDouble = Convert.ToDouble(amountToConvert);
-                        string secondCurrencyCode = ReadUserCommad($"Введите код валюты в которую вы хотите конвертировать {amountToConvert} {firstСurrencyCode.ToUpper()}: ");
-                        if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
+                        double amountSecondCurrency = ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountToConvertDouble);
+                        
+                        /*-------------------------Перевод валюты на счет после конвертации-------------------------*/
+                        if (amountToConvertDouble <= amountUserMoney[firstСurrencyCode])
                         {
-                            double amountSecondCurrency = ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountToConvertDouble);
-                            
-                            /*-------------------------Перевод валюты на счет после конвертации-------------------------*/
-                            if (amountToConvertDouble <= amountUserMoney[firstСurrencyCode])
+                            string transferCommand = ReadUserCommad($"Хотите перевести {amountToConvertDouble} {firstСurrencyCode.ToUpper()} на счет {secondCurrencyCode.ToUpper()}? Введите YES или NO: ");
+                            if (transferCommand == "yes")
                             {
-                                string transferCommand = ReadUserCommad($"Хотите перевести {amountToConvertDouble} {firstСurrencyCode.ToUpper()} на счет {secondCurrencyCode.ToUpper()}? Введите YES или NO: ");
-                                if (transferCommand == "yes")
-                                {
-                                    // double firstСurrencyAmount = amountUserMoney[firstСurrencyCode] - amountToConvertDouble;
-                                    // amountUserMoney.Remove(firstСurrencyCode);
-                                    // amountUserMoney.Add(firstСurrencyCode, Math.Round(firstСurrencyAmount, 2));
-                                    // double secondСurrencyAmount = amountUserMoney[secondCurrencyCode] + amountSecondCurrency;
-                                    // amountUserMoney.Remove(secondCurrencyCode);
-                                    // amountUserMoney.Add(secondCurrencyCode, Math.Round(secondСurrencyAmount, 2));
-                                    // Console.WriteLine("Готово!");
-                                    TransferCurrency(amountUserMoney, firstСurrencyCode, secondCurrencyCode, amountToConvertDouble, amountSecondCurrency);
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine($"У вас на балансе {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()}. Этого не достаточно что бы перевести {amountToConvertDouble} {firstСurrencyCode.ToUpper()} в {secondCurrencyCode.ToUpper()}");
+                                TransferCurrency(amountUserMoney, firstСurrencyCode, secondCurrencyCode, amountToConvertDouble, amountSecondCurrency);
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Введенный код валюты не найден!");
-                            CodesCurrencysCommand();
+                            Console.WriteLine($"У вас на балансе {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()}. Этого не достаточно что бы перевести {amountToConvertDouble} {firstСurrencyCode.ToUpper()} в {secondCurrencyCode.ToUpper()}");
                         }
                     }
-                    catch
+                    else
                     {
-                        Console.WriteLine("Введена неизвестная команда.");
-                        continue;
+                        Console.WriteLine("Введенный код валюты не найден!");
+                        CodesCurrencysCommand();
                     }
 
+                }
+                else
+                {
+                    Console.WriteLine("Введена неизвестная команда.");
+                    continue;
                 }
 
             }
@@ -171,7 +161,7 @@ while (exit != true)
 
         /*-------------------------Команда прерывает выполнение программы-------------------------*/
         case ("exit"):
-            exit = true;
+            isWork = true;
             break;
 
         default:
