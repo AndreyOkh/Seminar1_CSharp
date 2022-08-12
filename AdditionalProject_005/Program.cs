@@ -72,6 +72,7 @@ while (exit != true)
                 string amountToConvert = ReadUserCommad("Введите сумму для конвертации или ALL если хотите конвертировать всё: ");
                 if (amountToConvert == "all")
                 {
+                    double amountToConvertDouble = amountUserMoney[firstСurrencyCode];
                     string secondCurrencyCode = ReadUserCommad($"У вас {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()}, введите код валюты в которую вы хотите их конвертировать: ");
                     if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
                     {
@@ -81,13 +82,7 @@ while (exit != true)
                         string transferCommand = ReadUserCommad($"Хотите перевести {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()} на счет {secondCurrencyCode.ToUpper()}? Введите YES или NO: ");
                         if (transferCommand == "yes")
                         {
-                            amountUserMoney.Remove(firstСurrencyCode);
-                            amountUserMoney.Add(firstСurrencyCode, 0);
-                            double balanceConverte = amountUserMoney[secondCurrencyCode] + amountSecondCurrency;
-                            amountUserMoney.Remove(secondCurrencyCode);
-                            amountUserMoney.Add(secondCurrencyCode, Math.Round(balanceConverte, 2));
-                            Console.WriteLine("Готово!");
-
+                            TransferCurrency(amountUserMoney, firstСurrencyCode, secondCurrencyCode, amountToConvertDouble, amountSecondCurrency);
                         }
                         
                     }
@@ -113,13 +108,14 @@ while (exit != true)
                                 string transferCommand = ReadUserCommad($"Хотите перевести {amountToConvertDouble} {firstСurrencyCode.ToUpper()} на счет {secondCurrencyCode.ToUpper()}? Введите YES или NO: ");
                                 if (transferCommand == "yes")
                                 {
-                                    double firstСurrencyAmount = amountUserMoney[firstСurrencyCode] - amountToConvertDouble;
-                                    amountUserMoney.Remove(firstСurrencyCode);
-                                    amountUserMoney.Add(firstСurrencyCode, Math.Round(firstСurrencyAmount, 2));
-                                    double secondСurrencyAmount = amountUserMoney[secondCurrencyCode] + amountSecondCurrency;
-                                    amountUserMoney.Remove(secondCurrencyCode);
-                                    amountUserMoney.Add(secondCurrencyCode, Math.Round(secondСurrencyAmount, 2));
-                                    Console.WriteLine("Готово!");
+                                    // double firstСurrencyAmount = amountUserMoney[firstСurrencyCode] - amountToConvertDouble;
+                                    // amountUserMoney.Remove(firstСurrencyCode);
+                                    // amountUserMoney.Add(firstСurrencyCode, Math.Round(firstСurrencyAmount, 2));
+                                    // double secondСurrencyAmount = amountUserMoney[secondCurrencyCode] + amountSecondCurrency;
+                                    // amountUserMoney.Remove(secondCurrencyCode);
+                                    // amountUserMoney.Add(secondCurrencyCode, Math.Round(secondСurrencyAmount, 2));
+                                    // Console.WriteLine("Готово!");
+                                    TransferCurrency(amountUserMoney, firstСurrencyCode, secondCurrencyCode, amountToConvertDouble, amountSecondCurrency);
                                 }
                             }
                             else
@@ -207,4 +203,9 @@ double ConvertToCurrency (string firstCurrencyCode, double firstCostCurrency, st
     return rubToSecondCurrency;
 }
 
-
+void TransferCurrency (Dictionary<string, double> amountUserMoney, string firstСurrencyCode, string secondCurrencyCode, double amountToConvert, double amountSecondCurrency)
+{
+    amountUserMoney[firstСurrencyCode] = Math.Round(amountUserMoney[firstСurrencyCode] - amountToConvert, 2);
+    amountUserMoney[secondCurrencyCode] = Math.Round(amountUserMoney[secondCurrencyCode] + amountSecondCurrency, 2);
+    Console.WriteLine("Готово!");
+}
