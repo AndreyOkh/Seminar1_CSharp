@@ -17,12 +17,12 @@ var costsCurrencys = new Dictionary<string, double>()
 /*-------------------------Баланс пользователя-------------------------*/
 var amountUserMoney = new Dictionary<string, double>()
 {
-    {"usd", 53425},
-    {"eur", 64524},
-    {"sek", 34645},
-    {"chf", 43245},
-    {"jpu", 46344},
-    {"rub", 124827485734}
+    {"usd", 534},
+    {"eur", 624},
+    {"sek", 4645},
+    {"chf", 435},
+    {"jpu", 344},
+    {"rub", 85734}
 };
 
 /*-------------------------Help-------------------------*/
@@ -75,7 +75,20 @@ while (exit != true)
                     string secondCurrencyCode = ReadUserCommad($"У вас {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()}, введите код валюты в которую вы хотите их конвертировать: ");
                     if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
                     {
-                        ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountUserMoney[firstСurrencyCode]);
+                        double amountSecondCurrency = ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountUserMoney[firstСurrencyCode]);
+                        /*-------------------------Перевод валюты на счет после конвертации-------------------------*/
+                        string transferCommand = ReadUserCommad($"Хотите перевести {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()} на счет {secondCurrencyCode.ToUpper()}? Введите YES или NO: ");
+                        if (transferCommand == "yes")
+                        {
+                            amountUserMoney.Remove(firstСurrencyCode);
+                            amountUserMoney.Add(firstСurrencyCode, 0);
+                            double balanceConverte = amountUserMoney[secondCurrencyCode] + amountSecondCurrency;
+                            amountUserMoney.Remove(secondCurrencyCode);
+                            amountUserMoney.Add(secondCurrencyCode, Math.Round(balanceConverte, 2));
+                            Console.WriteLine("Готово!");
+
+                        }
+                        
                     }
                     else
                     {
@@ -165,9 +178,12 @@ string ReadUserCommad (string message)
 }
 
 /*-------------------------Конвертация валюты-------------------------*/
-void ConvertToCurrency (string firstCurrencyCode, double firstCostCurrency, string secondCurrencyCode, double secondCostCurrency, double amount)
+double ConvertToCurrency (string firstCurrencyCode, double firstCostCurrency, string secondCurrencyCode, double secondCostCurrency, double amount)
 {
     double firstCurrencyToRub = firstCostCurrency * amount;
     double rubToSecondCurrency = firstCurrencyToRub / secondCostCurrency;
     Console.WriteLine($"{amount} {firstCurrencyCode.ToUpper()} = {Math.Round(rubToSecondCurrency, 2)} {secondCurrencyCode.ToUpper()}");
+    return rubToSecondCurrency;
 }
+
+
