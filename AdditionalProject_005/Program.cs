@@ -76,6 +76,7 @@ while (exit != true)
                     if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
                     {
                         double amountSecondCurrency = ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountUserMoney[firstСurrencyCode]);
+
                         /*-------------------------Перевод валюты на счет после конвертации-------------------------*/
                         string transferCommand = ReadUserCommad($"Хотите перевести {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()} на счет {secondCurrencyCode.ToUpper()}? Введите YES или NO: ");
                         if (transferCommand == "yes")
@@ -104,7 +105,27 @@ while (exit != true)
                         string secondCurrencyCode = ReadUserCommad($"Введите код валюты в которую вы хотите конвертировать {amountToConvert} {firstСurrencyCode.ToUpper()}: ");
                         if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
                         {
-                            ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountToConvertDouble);
+                            double amountSecondCurrency = ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountToConvertDouble);
+                            
+                            /*-------------------------Перевод валюты на счет после конвертации-------------------------*/
+                            if (amountToConvertDouble <= amountUserMoney[firstСurrencyCode])
+                            {
+                                string transferCommand = ReadUserCommad($"Хотите перевести {amountToConvertDouble} {firstСurrencyCode.ToUpper()} на счет {secondCurrencyCode.ToUpper()}? Введите YES или NO: ");
+                                if (transferCommand == "yes")
+                                {
+                                    double firstСurrencyAmount = amountUserMoney[firstСurrencyCode] - amountToConvertDouble;
+                                    amountUserMoney.Remove(firstСurrencyCode);
+                                    amountUserMoney.Add(firstСurrencyCode, Math.Round(firstСurrencyAmount, 2));
+                                    double secondСurrencyAmount = amountUserMoney[secondCurrencyCode] + amountSecondCurrency;
+                                    amountUserMoney.Remove(secondCurrencyCode);
+                                    amountUserMoney.Add(secondCurrencyCode, Math.Round(secondСurrencyAmount, 2));
+                                    Console.WriteLine("Готово!");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine($"У вас на балансе {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()}. Этого не достаточно что бы перевести {amountToConvertDouble} {firstСurrencyCode.ToUpper()} в {secondCurrencyCode.ToUpper()}");
+                            }
                         }
                         else
                         {
