@@ -14,7 +14,7 @@ string? password = "";
 /*--------------------Цикл ожидания команды--------------------*/
  while (command != "exit") {
     Console.Write("Введите команду: ");
-    command = Console.ReadLine().ToLower();
+    command = Console.ReadLine()!.ToLower();
 
     switch(command)
     {
