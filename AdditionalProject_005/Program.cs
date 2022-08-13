@@ -74,52 +74,11 @@ while (!isWork)
                 if (amountToConvert == "all")
                 {
                     amountToConvertDouble = amountUserMoney[firstСurrencyCode];
-                    string secondCurrencyCode = ReadUserCommad($"У вас {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()}, введите код валюты в которую вы хотите их конвертировать: ");
-                    if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
-                    {
-                        double amountSecondCurrency = ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountUserMoney[firstСurrencyCode]);
-
-                        /*-------------------------Перевод валюты на счет после конвертации-------------------------*/
-                        string transferCommand = ReadUserCommad($"Хотите перевести {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()} на счет {secondCurrencyCode.ToUpper()}? Введите YES или NO: ");
-                        if (transferCommand == "yes")
-                        {
-                            TransferCurrency(amountUserMoney, firstСurrencyCode, secondCurrencyCode, amountToConvertDouble, amountSecondCurrency);
-                        }
-                        
-                    }
-                    else
-                    {
-                        Console.WriteLine("Введенный код валюты не найден!");
-                        CodesCurrencysCommand();
-                    }
+                    ConvertAndTransferMoney(costsCurrencys, amountUserMoney, amountToConvert, firstСurrencyCode, amountToConvertDouble);
                 }
                 else if (amountToConvertTry)
                 {
-                    string secondCurrencyCode = ReadUserCommad($"Введите код валюты в которую вы хотите конвертировать {amountToConvert} {firstСurrencyCode.ToUpper()}: ");
-                    if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
-                    {
-                        double amountSecondCurrency = ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountToConvertDouble);
-                        
-                        /*-------------------------Перевод валюты на счет после конвертации-------------------------*/
-                        if (amountToConvertDouble <= amountUserMoney[firstСurrencyCode])
-                        {
-                            string transferCommand = ReadUserCommad($"Хотите перевести {amountToConvertDouble} {firstСurrencyCode.ToUpper()} на счет {secondCurrencyCode.ToUpper()}? Введите YES или NO: ");
-                            if (transferCommand == "yes")
-                            {
-                                TransferCurrency(amountUserMoney, firstСurrencyCode, secondCurrencyCode, amountToConvertDouble, amountSecondCurrency);
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"У вас на балансе {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()}. Этого не достаточно что бы перевести {amountToConvertDouble} {firstСurrencyCode.ToUpper()} в {secondCurrencyCode.ToUpper()}");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Введенный код валюты не найден!");
-                        CodesCurrencysCommand();
-                    }
-
+                    ConvertAndTransferMoney(costsCurrencys, amountUserMoney, amountToConvert, firstСurrencyCode, amountToConvertDouble);
                 }
                 else
                 {
@@ -193,9 +152,39 @@ double ConvertToCurrency (string firstCurrencyCode, double firstCostCurrency, st
     return rubToSecondCurrency;
 }
 
+/*-------------------------Перевод валюты-------------------------*/
 void TransferCurrency (Dictionary<string, double> amountUserMoney, string firstСurrencyCode, string secondCurrencyCode, double amountToConvert, double amountSecondCurrency)
 {
     amountUserMoney[firstСurrencyCode] = Math.Round(amountUserMoney[firstСurrencyCode] - amountToConvert, 2);
     amountUserMoney[secondCurrencyCode] = Math.Round(amountUserMoney[secondCurrencyCode] + amountSecondCurrency, 2);
     Console.WriteLine("Готово!");
+}
+
+/*-------------------------Конвертация и перевод валюты-------------------------*/
+void ConvertAndTransferMoney (Dictionary<string, double> costsCurrencys, Dictionary<string, double> amountUserMoney, string amountToConvert, string firstСurrencyCode, double amountToConvertDouble)
+{
+    string secondCurrencyCode = ReadUserCommad($"Введите код валюты в которую вы хотите конвертировать {amountToConvert} {firstСurrencyCode.ToUpper()}: ");
+    if (costsCurrencys.ContainsKey(firstСurrencyCode) && costsCurrencys.ContainsKey(secondCurrencyCode))
+    {
+        double amountSecondCurrency = ConvertToCurrency(firstСurrencyCode, costsCurrencys[firstСurrencyCode],secondCurrencyCode , costsCurrencys[secondCurrencyCode], amountToConvertDouble);
+        
+        /*-------------------------Перевод валюты на счет после конвертации-------------------------*/
+        if (amountToConvertDouble <= amountUserMoney[firstСurrencyCode])
+        {
+            string transferCommand = ReadUserCommad($"Хотите перевести {amountToConvertDouble} {firstСurrencyCode.ToUpper()} на счет {secondCurrencyCode.ToUpper()}? Введите YES или NO: ");
+            if (transferCommand == "yes" || transferCommand == "y")
+            {
+                TransferCurrency(amountUserMoney, firstСurrencyCode, secondCurrencyCode, amountToConvertDouble, amountSecondCurrency);
+            }
+        }
+        else
+        {
+            Console.WriteLine($"У вас на балансе {amountUserMoney[firstСurrencyCode]} {firstСurrencyCode.ToUpper()}. Этого не достаточно что бы перевести {amountToConvertDouble} {firstСurrencyCode.ToUpper()} в {secondCurrencyCode.ToUpper()}");
+        }
+    }
+    else
+    {
+        Console.WriteLine("Введенный код валюты не найден!");
+        CodesCurrencysCommand();
+    }
 }
