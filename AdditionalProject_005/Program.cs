@@ -139,8 +139,9 @@ while (!isWork)
 string ReadUserCommad (string message)
 {
     Console.Write(message);
-    string? result = Console.ReadLine().ToLower();
+    string? result = Console.ReadLine()!.ToLower();
     return result;
+    
 }
 
 /*-------------------------Конвертация валюты-------------------------*/
