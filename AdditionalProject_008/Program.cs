@@ -126,7 +126,6 @@ int[] AddNumbers(int[] arrayOld)
         MatchCollection matches = regex.Matches(inputNumbers);
 
         int arrayOldLength = arrayOld.Length;
-        int matchesLength = matches.Count;
         int [] arrayNew = new int [arrayOldLength + matches.Count];
         arrayOld.CopyTo(arrayNew, 0);
 
