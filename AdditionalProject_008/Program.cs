@@ -20,12 +20,14 @@ while (isWork)
     {
         case("setnumbers"):
             arrayNumbers = SetNumbers();
+            Console.WriteLine("Значения сохранены.");
             break;
         
         case("addnumbers"):
             if(arrayNumbers.Length != 0)
             {
                 arrayNumbers = AddNumbers(arrayNumbers);
+                Console.WriteLine("Значения добавлены.");
             }
             else
             {
@@ -38,6 +40,7 @@ while (isWork)
             if(arrayNumbers.Length != 0)
             {
                 arrayNumbers = RemoveNumbers(arrayNumbers);
+                Console.WriteLine("Значения удалены.");
             }
             else
             {
@@ -67,14 +70,51 @@ while (isWork)
     }
 }
 
+/*-------------------------Ввод чисел-------------------------*/
+string[] InputNumbers ()
+{
+    Console.Write("Введите числа разделяя их пробелом: ");
+    string[] numbers = Console.ReadLine()!.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+    return numbers;
+    
+}
 
-/*-------------------------Запрос команды-------------------------*/
+/*-------------------------Ввод команд-------------------------*/
 string ReadUserCommad (string message)
 {
     Console.Write(message);
     string? result = Console.ReadLine()!.ToLower();
     return result;
     
+}
+
+/*-------------------------Проверяем и считаем количество числовых значений в массиве-------------------------*/
+int CountNumbers(string[] array)
+{
+    int countNumbers = 0;
+    foreach (string i in array)
+    {
+        if(int.TryParse(i, out int number))
+        {
+            countNumbers++;
+        }
+    }
+    return countNumbers;
+}
+
+/*-------------------------Перебор массива-------------------------*/
+int[] RoundForArray(string[] array, int startIndex, int size)
+{
+    int[] arrayNew = new int[size];
+    for (int i = 0; i < array.Length; i++)
+    {
+        if(int.TryParse(array[i], out int number))
+        {
+            arrayNew[startIndex] = Convert.ToInt32(array[i]);
+            startIndex++;
+        }
+    }
+    return arrayNew;
 }
 
 /*-------------------------Справка-------------------------*/
@@ -88,107 +128,6 @@ void Help()
                         Sum – найдется сумма всех элементов массива
                         Help - выведет справку
                         Exit - завершение работы");
-}
-
-/*-------------------------SetNumbers-------------------------*/
-// SetNumbers – пользователь вводит числа через пробел, а программа запоминает их в массив
-int[] SetNumbers()
-{
-    Console.Write("Введите числа разделяя их пробелом: ");
-    string inputNumbers = Console.ReadLine()!;
-
-    Regex regex = new Regex(@"\b\d[0-9]{0,}\b");
-    MatchCollection matches = regex.Matches(inputNumbers);
-    int[] array = new int [matches.Count];
-    if (matches.Count > 0)
-    {
-        int i = 0;
-        foreach (Match match in matches)
-        {
-            array[i] = Convert.ToInt32(match.Value);
-            i++;
-        }
-    }
-    Console.WriteLine("Значения сохранены.");
-    return array;
-}
-
-/*-------------------------AddNumbers-------------------------*/
-// AddNumbers – пользователь вводит числа, которые добавятся к уже существующему массиву
-int[] AddNumbers(int[] arrayOld)
-{
-    if(arrayOld.Length != 0)
-    {
-        Console.Write("Введите числа которые хотите добавить разделяя их пробелом: ");
-        string inputNumbers = Console.ReadLine()!;
-
-        Regex regex = new Regex(@"\b\d[0-9]{0,}\b");
-        MatchCollection matches = regex.Matches(inputNumbers);
-
-        int arrayOldLength = arrayOld.Length;
-        int [] arrayNew = new int [arrayOldLength + matches.Count];
-        arrayOld.CopyTo(arrayNew, 0);
-
-        if (matches.Count > 0)
-        {
-            foreach (Match match in matches)
-            {
-                arrayNew[arrayOldLength] = Convert.ToInt32(match.Value);
-                arrayOldLength++;
-            }
-        }
-        Console.WriteLine("Значения добавлены.");
-        return arrayNew;
-    }
-    else
-    {
-        Console.WriteLine("Массив пуст, сначала заполните массив выполнив команду SetNumbers.");
-        return arrayOld;
-    }
-}
-
-/*-------------------------RemoveNumbers-------------------------*/
-// RemoveNumbers -  пользователь вводит числа, которые если  найдутся в массиве, то будут удалены
-int[] RemoveNumbers(int [] arrayOld)
-{
-    if(arrayOld.Length != 0)
-    {
-        Console.Write("Введите числа которые хотите удалить из массива разделяя их пробелом: ");
-        string inputNumbers = Console.ReadLine()!;
-
-        Regex regex = new Regex(@"\b\d[0-9]{0,}\b");
-        MatchCollection matches = regex.Matches(inputNumbers);
-        int arrayOldDelCount = 0;
-        for (int i = 0; i < arrayOld.Length; i++)
-        {
-            foreach (Match match in matches)
-            {
-                if (arrayOld[i] == Convert.ToInt32(match.Value))
-                {
-                    arrayOld[i] = -1;
-                    arrayOldDelCount++;
-                }
-            }
-        }
-        int[] arrayNew = new int[arrayOld.Length - arrayOldDelCount];
-        int arrayNewIndex = 0;
-        foreach (int item in arrayOld)
-        {
-            if (item != -1)
-            {
-                arrayNew[arrayNewIndex] = item;
-                arrayNewIndex++;
-            }
-        }
-
-        Console.WriteLine("Значения удалены.");
-        return arrayNew;
-    }
-    else
-    {
-        Console.WriteLine("Массив пуст, сначала заполните массив выполнив команду SetNumbers.");
-        return arrayOld;
-    }
 }
 
 /*-------------------------Numbers-------------------------*/
@@ -229,5 +168,85 @@ void Sum(int[] array)
     else
     {
         Console.WriteLine("Массив пуст, сначала заполните массив выполнив команду SetNumbers.");
+    }
+}
+
+/*-------------------------SetNumbers-------------------------*/
+// SetNumbers – пользователь вводит числа через пробел, а программа запоминает их в массив
+int[] SetNumbers()
+{
+    string[] numbersArray = InputNumbers(); // Запрашиваем значения у пользователя
+    int numbersArraySize = CountNumbers(numbersArray); // Проверяем сколько из них являются числами
+    int[] array = new int [numbersArraySize];
+
+    // Сохраняем числа в массив
+    array = RoundForArray(numbersArray, 0, numbersArraySize);
+    return array;
+}
+
+/*-------------------------AddNumbers-------------------------*/
+// AddNumbers – пользователь вводит числа, которые добавятся к уже существующему массиву
+int[] AddNumbers(int[] arrayOld)
+{
+    if(arrayOld.Length != 0)
+    {
+        string[] numbersArray = InputNumbers();
+        int numbersArraySize = CountNumbers(numbersArray);
+
+        int arrayOldLength = arrayOld.Length;
+        int [] arrayNew = new int [arrayOldLength + numbersArraySize];
+        arrayOld.CopyTo(arrayNew, 0);
+        RoundForArray(numbersArray, 0, numbersArraySize).CopyTo(arrayNew, arrayOldLength);
+        return arrayNew;
+    }
+    else
+    {
+        return arrayOld;
+    }
+}
+
+/*-------------------------RemoveNumbers-------------------------*/
+// RemoveNumbers -  пользователь вводит числа, которые если  найдутся в массиве, то будут удалены
+int[] RemoveNumbers(int [] arrayOld)
+{
+    if(arrayOld.Length != 0)
+    {
+        string[] numbersArray = InputNumbers();
+        int numbersArraySize = CountNumbers(numbersArray);
+
+        // Создаем массив чисел на удаление
+        int[] numbersDelArray = new int[numbersArraySize];
+        numbersDelArray = RoundForArray(numbersArray, 0, numbersArraySize);
+
+        // Находим и помечаем на удаление значения массива
+        int arrayOldDelCount = 0;
+        for (int i = 0; i < arrayOld.Length; i++)
+        {
+            foreach (int number in numbersDelArray)
+            {
+                if (arrayOld[i] == number)
+                {
+                    arrayOld[i] = -1;
+                    arrayOldDelCount++;
+                }
+            }
+        }
+
+        // Создаем новый массив и копируем значения исключая помеченные
+        int[] arrayNew = new int[arrayOld.Length - arrayOldDelCount];
+        int arrayNewIndex = 0;
+        foreach (int item in arrayOld)
+        {
+            if (item != -1)
+            {
+                arrayNew[arrayNewIndex] = item;
+                arrayNewIndex++;
+            }
+        }
+        return arrayNew;
+    }
+    else
+    {
+        return arrayOld;
     }
 }
