@@ -226,7 +226,7 @@ int[] RemoveNumbers(int [] arrayOld)
             {
                 if (arrayOld[i] == number)
                 {
-                    arrayOld[i] = -1;
+                    arrayOld[i] = -0;
                     arrayOldDelCount++;
                 }
             }
@@ -237,7 +237,7 @@ int[] RemoveNumbers(int [] arrayOld)
         int arrayNewIndex = 0;
         foreach (int item in arrayOld)
         {
-            if (item != -1)
+            if (item != -0)
             {
                 arrayNew[arrayNewIndex] = item;
                 arrayNewIndex++;
