@@ -72,34 +72,36 @@ while (isWork)
             {
                 int getUserOnIncome = Convert.ToInt32(ReadUserCommad("Что бы вывести список сотрудников с определенным доходом укажите сумму (Например: -10000 выведет всех сотрудников с доходом меньше или равному 10000р, или 10000 выведет всех сотрудников с доходом больше или равному 10000р): "));
 
-                if (getUserOnIncome < 0)
-                {
-                    int count = 0;
-                    getUserOnIncome *= -1;
-                    for (int i = 0; i < user.Length; i++)
-                    {
-                        if(Convert.ToInt32(income[i]) <= getUserOnIncome)
-                        {
-                            Console.WriteLine($"{count + 1}. {user[i]} - {position[i]} - {income[i]}р.");
-                            count++;
-                        }
-                    }
-                    if(count == 0) Console.WriteLine("Досье отсутствуют!");
-                }
-                else if (getUserOnIncome > 0)
-                {
-                    int count = 0;
-                    for (int i = 0; i < user.Length; i++)
-                    {
-                        if(Convert.ToInt32(income[i]) >= getUserOnIncome)
-                        {
-                            Console.WriteLine($"{count + 1}. {user[i]} - {position[i]} - {income[i]}р.");
-                            count++;
-                        }
-                    }
-                    if(count == 0) Console.WriteLine("Досье отсутствуют!");
-                }
-                else Console.WriteLine("Да за кого вы нас держите?");
+                PrintUserOnIncome(user, position, income, getUserOnIncome);
+
+                // if (getUserOnIncome < 0)
+                // {
+                //     getUserOnIncome *= -1;
+                //     int count = 0;
+                //     for (int i = 0; i < user.Length; i++)
+                //     {
+                //         if(Convert.ToInt32(income[i]) <= getUserOnIncome)
+                //         {
+                //             Console.WriteLine($"{count + 1}. {user[i]} - {position[i]} - {income[i]}р.");
+                //             count++;
+                //         }
+                //     }
+                //     if(count == 0) Console.WriteLine("Досье отсутствуют!");
+                // }
+                // else if (getUserOnIncome > 0)
+                // {
+                //     int count = 0;
+                //     for (int i = 0; i < user.Length; i++)
+                //     {
+                //         if(Convert.ToInt32(income[i]) >= getUserOnIncome)
+                //         {
+                //             Console.WriteLine($"{count + 1}. {user[i]} - {position[i]} - {income[i]}р.");
+                //             count++;
+                //         }
+                //     }
+                //     if(count == 0) Console.WriteLine("Досье отсутствуют!");
+                // }
+                // else Console.WriteLine("Да за кого вы нас держите?");
             }
             else Console.WriteLine("Досье отсутствуют!");
             break;
@@ -163,10 +165,19 @@ void Help()
 /*-------------------------Справка-------------------------*/
 string[] RemoveRowArray(string[] array, int index)
 {
-    string[] newArray = new string[array.Length - 1];
-    Array.Copy(array, 0, newArray, 0, index - 1);
-    Array.Copy(array, index, newArray, index - 1, array.Length - index);
-    return newArray;
+    try
+    {
+        string[] newArray = new string[array.Length - 1];
+        Array.Copy(array, 0, newArray, 0, index - 1);
+        Array.Copy(array, index, newArray, index - 1, array.Length - index);
+        return newArray;
+    }
+    catch
+    {
+        Console.WriteLine("Не удалось выполнить команду RemoveRowArray.");
+        return array;
+    }
+
 }
 
 /*-------------------------Генератор досье пользователей (Только для теста)-------------------------*/
@@ -205,4 +216,21 @@ void GenerateProfile(ref string[] user, ref string[] position, ref string[] inco
         income[i] = userIncome;
 
     }
+}
+
+void PrintUserOnIncome(string[] user, string[] position, string[] income, int getIncome)
+{
+    bool searchDirection = getIncome < 0 ? false : true;
+    if (!searchDirection) getIncome *= -1;
+    int count = 0;
+    for (int i = 0; i < user.Length; i++)
+    {
+        bool validValue = Convert.ToInt32(income[i]) < getIncome ? false: true;
+        if(validValue == searchDirection)
+        {
+            Console.WriteLine($"{count + 1}. {user[i]} - {position[i]} - {income[i]}р.");
+            count++;
+        }
+    }
+    if(count == 0) Console.WriteLine("Досье отсутствуют!");
 }
