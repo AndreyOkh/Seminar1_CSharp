@@ -53,16 +53,7 @@ while (isWork)
             if(user.Length != 0)
             {
                 string getUserOnPosition = ReadUserCommad("Введите название должности что бы вывести список нужных работников: ");
-                int count = 0;
-                for (int i = 0; i < user.Length; i++)
-                {
-                    if(position[i].ToLower() == getUserOnPosition)
-                    {
-                        Console.WriteLine($"{count + 1}. {user[i]} - {position[i]} - {income[i]}р.");
-                        count++;
-                    }
-                }
-                if(count == 0) Console.WriteLine("Досье с указанной должностью отсутствуют!");
+                PrintSearchDossier(user, position, income, position, getUserOnPosition);
             }
             else Console.WriteLine("Досье отсутствуют!");
             break;
@@ -73,35 +64,6 @@ while (isWork)
                 int getUserOnIncome = Convert.ToInt32(ReadUserCommad("Что бы вывести список сотрудников с определенным доходом укажите сумму (Например: -10000 выведет всех сотрудников с доходом меньше или равному 10000р, или 10000 выведет всех сотрудников с доходом больше или равному 10000р): "));
 
                 PrintUserOnIncome(user, position, income, getUserOnIncome);
-
-                // if (getUserOnIncome < 0)
-                // {
-                //     getUserOnIncome *= -1;
-                //     int count = 0;
-                //     for (int i = 0; i < user.Length; i++)
-                //     {
-                //         if(Convert.ToInt32(income[i]) <= getUserOnIncome)
-                //         {
-                //             Console.WriteLine($"{count + 1}. {user[i]} - {position[i]} - {income[i]}р.");
-                //             count++;
-                //         }
-                //     }
-                //     if(count == 0) Console.WriteLine("Досье отсутствуют!");
-                // }
-                // else if (getUserOnIncome > 0)
-                // {
-                //     int count = 0;
-                //     for (int i = 0; i < user.Length; i++)
-                //     {
-                //         if(Convert.ToInt32(income[i]) >= getUserOnIncome)
-                //         {
-                //             Console.WriteLine($"{count + 1}. {user[i]} - {position[i]} - {income[i]}р.");
-                //             count++;
-                //         }
-                //     }
-                //     if(count == 0) Console.WriteLine("Досье отсутствуют!");
-                // }
-                // else Console.WriteLine("Да за кого вы нас держите?");
             }
             else Console.WriteLine("Досье отсутствуют!");
             break;
@@ -110,16 +72,7 @@ while (isWork)
             if (user.Length != 0)
             {
                 string getSurName = ReadUserCommad("Введите фамилию работника: ");
-                int count = 0;
-                for (int i = 0; i < user.Length; i++)
-                {
-                    if (user[i].Contains(getSurName, StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        Console.WriteLine($"{count + 1}. {user[i]} - {position[i]} - {income[i]}р.");
-                        count++;
-                    }
-                }
-                if(count == 0) Console.WriteLine("Досье отсутствуют!");
+                PrintSearchDossier(user, position, income, user, getSurName);
             }
             else Console.WriteLine("Досье отсутствуют!");
             break;
@@ -157,7 +110,7 @@ void Help()
                         Dossiers – выводит все досье
                         DossierOnPosition - выводит все досье с указанное должностью
                         DossierOnIncome - выводит досье с ЗП выше или ниже указанной
-                        GetDossier – поиск досье по фамилии
+                        GetDossier – поиск досье
                         Help - выведет справку
                         Exit - завершение работы");
 }
@@ -227,6 +180,20 @@ void PrintUserOnIncome(string[] user, string[] position, string[] income, int ge
     {
         bool validValue = Convert.ToInt32(income[i]) < getIncome ? false: true;
         if(validValue == searchDirection)
+        {
+            Console.WriteLine($"{count + 1}. {user[i]} - {position[i]} - {income[i]}р.");
+            count++;
+        }
+    }
+    if(count == 0) Console.WriteLine("Досье отсутствуют!");
+}
+
+void PrintSearchDossier(string[] user, string[] position, string[] income, string[] researchedArray, string getValue)
+{
+    int count = 0;
+    for (int i = 0; i < researchedArray.Length; i++)
+    {
+        if( researchedArray[i].Contains(getValue, StringComparison.CurrentCultureIgnoreCase))
         {
             Console.WriteLine($"{count + 1}. {user[i]} - {position[i]} - {income[i]}р.");
             count++;
